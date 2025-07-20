@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin Registration</title>
+<style>
+  body {
+    background: #ecf0f1;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .register-container {
+    background: white;
+    padding: 2rem 3rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgb(0 0 0 / 0.2);
+    width: 350px;
+  }
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    text-align: center;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  input[type="text"], input[type="email"], input[type="password"] {
+    padding: 0.7rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    border-color: #2980b9;
+    outline: none;
+  }
+  button[type="submit"] {
+    background: #2980b9;
+    border: none;
+    color: white;
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button[type="submit"]:hover {
+    background: #1c5980;
+  }
+  .error-message {
+    color: #e74c3c;
+    margin-bottom: 1rem;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="register-container">
+  <h2>Admin Registration</h2>
+  <form action="/admin/register" method="POST" id="adminRegForm">
+    <input type="text" name="fullname" placeholder="Full Name" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="password" name="password" placeholder="Password" required />
+    <input type="password" name="confirmPassword" placeholder="Confirm Password" required />
+    <div class="error-message" id="errorMsg"></div>
+    <button type="submit">Register</button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('adminRegForm');
+  const errorMsg = document.getElementById('errorMsg');
+
+  form.addEventListener('submit', e => {
+    const pwd = form.password.value;
+    const cpwd = form.confirmPassword.value;
+    if (pwd !== cpwd) {
+      e.preventDefault();
+      errorMsg.textContent = "Passwords do not match";
+      errorMsg.style.display = "block";
+    }
+  });
+</script>
+
+</body>
+</html>

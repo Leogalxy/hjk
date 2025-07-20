@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Questions & Answers</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f9fafb;
+    margin: 0; padding: 0;
+    color: #333;
+  }
+  header {
+    background: #34495e;
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: bold;
+  }
+  main {
+    max-width: 960px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .filter-bar select,
+  .filter-bar input[type="text"] {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    min-width: 180px;
+  }
+  .filter-bar button {
+    padding: 0.6rem 1.5rem;
+    background: #34495e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .filter-bar button:hover {
+    background: #2c3e50;
+  }
+  .qa-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .qa-item {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+    padding: 1.2rem 1.5rem;
+    transition: box-shadow 0.3s ease;
+  }
+  .qa-item:hover {
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.15);
+  }
+  .question {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #34495e;
+  }
+  .subject-tag {
+    display: inline-block;
+    background: #ecf0f1;
+    color: #7f8c8d;
+    font-size: 0.85rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+  }
+  .answer {
+    font-size: 1rem;
+    color: #555;
+    white-space: pre-wrap;
+    margin-top: 0.5rem;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem;
+    color: #999;
+    font-size: 0.9rem;
+    margin-top: 3rem;
+  }
+</style>
+</head>
+<body>
+
+<header>Questions & Answers</header>
+
+<main>
+  <div class="filter-bar">
+    <select id="subjectFilter" aria-label="Filter by Subject">
+      <option value="">All Subjects</option>
+      <option value="Physics">Physics</option>
+      <option value="Chemistry">Chemistry</option>
+      <option value="Mathematics">Mathematics</option>
+      <option value="Biology">Biology</option>
+      <option value="Civics">Civics</option>
+      <option value="English">English</option>
+      <option value="Kiswahili">Kiswahili</option>
+      <option value="Geography">Geography</option>
+      <option value="Computer Science">Computer Science</option>
+    </select>
+
+    <input
+      type="text"
+      id="questionSearch"
+      placeholder="Search question text..."
+      aria-label="Search questions"
+    />
+
+    <button id="filterBtn">Filter</button>
+  </div>
+
+  <div class="qa-list" id="qaContainer">
+    <!-- Questions & Answers will be rendered here -->
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Your School Site
+</footer>
+
+<script>
+  async function fetchQA(subject = '', search = '') {
+    try {
+      let url = '/qa';
+      const params = new URLSearchParams();
+      if (subject) params.append('subject', subject);
+      if (search) params.append('search', search);
+      if (params.toString()) url += '?' + params.toString();
+
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Failed to fetch Q&A');
+      const qaList = await res.json();
+
+      const container = document.getElementById('qaContainer');
+      container.innerHTML = '';
+
+      if (!qaList.length) {
+        container.innerHTML = '<p>No questions found for selected filters.</p>';
+        return;
+      }
+
+      qaList.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'qa-item';
+        div.innerHTML = `
+          <div class="subject-tag">${item.subject}</div>
+          <div class="question">${item.question}</div>
+          <div class="answer">${item.answer}</div>
+        `;
+        container.appendChild(div);
+      });
+    } catch (err) {
+      console.error(err);
+      document.getElementById('qaContainer').innerHTML = '<p>Error loading questions and answers.</p>';
+    }
+  }
+
+  function applyFilters() {
+    const subject = document.getElementById('subjectFilter').value;
+    const search = document.getElementById('questionSearch').value.trim();
+    fetchQA(subject, search);
+  }
+
+  document.getElementById('filterBtn').addEventListener('click', applyFilters);
+  document.getElementById('questionSearch').addEventListener('keyup', e => {
+    if (e.key === 'Enter') applyFilters();
+  });
+
+  window.onload = () => fetchQA();
+</script>
+
+</body>
+</html>

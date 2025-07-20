@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin Dashboard</title>
+<style>
+  /* Reset & basic */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f7fa;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background: #2c3e50;
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header .logout-btn {
+    background: #e74c3c;
+    border: none;
+    color: white;
+    padding: 0.4rem 0.9rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  header .logout-btn:hover {
+    background: #c0392b;
+  }
+  nav {
+    background: white;
+    padding: 1rem 2rem;
+    display: flex;
+    gap: 1rem;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+  }
+  nav button {
+    background: #2980b9;
+    border: none;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    flex-grow: 1;
+    transition: background 0.3s ease;
+  }
+  nav button:hover {
+    background: #1f618d;
+  }
+  main {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+    border-radius: 8px;
+  }
+  h2 {
+    margin-top: 0;
+    color: #34495e;
+  }
+  form {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  select, input[type="text"], input[type="file"], textarea {
+    flex: 1 1 200px;
+    padding: 0.5rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  button[type="submit"] {
+    background: #27ae60;
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    align-self: flex-start;
+  }
+  button[type="submit"]:hover {
+    background: #1e8449;
+  }
+  .hidden {
+    display: none;
+  }
+  /* Responsive */
+  @media (max-width: 700px) {
+    nav {
+      flex-direction: column;
+    }
+    form {
+      flex-direction: column;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>Admin Dashboard</div>
+  <form action="/logout" method="GET" style="margin:0;">
+    <button type="submit" class="logout-btn">Logout</button>
+  </form>
+</header>
+
+<nav>
+  <button id="btn-upload-book">Upload Books</button>
+  <button id="btn-upload-question">Upload Q&A</button>
+  <button id="btn-upload-pastpaper">Upload Past Papers</button>
+  <button id="btn-upload-video">Upload Teaching Videos</button>
+  <button id="btn-upload-sports">Upload Sports & Games</button>
+</nav>
+
+<main>
+  <!-- Upload Book -->
+  <section id="upload-book" class="active-section">
+    <h2>📚 Upload a New Book</h2>
+    <form action="/upload/book" method="POST" enctype="multipart/form-data">
+      <select name="subject" required>
+        <option value="">Select Subject</option>
+        <option value="Physics">Physics</option>
+        <option value="Chemistry">Chemistry</option>
+        <option value="Mathematics">Mathematics</option>
+        <option value="Civics">Civics</option>
+        <option value="Biology">Biology</option>
+        <option value="English">English</option>
+        <option value="Kiswahili">Kiswahili</option>
+        <option value="Geography">Geography</option>
+        <option value="Computer Science">Computer Science</option>
+      </select>
+      <input type="text" name="title" placeholder="Book Title" required />
+      <input type="text" name="description" placeholder="Book Description" required />
+      <label>Book Image</label>
+      <input type="file" name="image" accept="image/*" required />
+      <label>Upload File (PDF)</label>
+      <input type="file" name="file" accept=".pdf" required />
+      <button type="submit">Upload Book</button>
+    </form>
+  </section>
+
+  <!-- Upload Question & Answer -->
+  <section id="upload-question" class="hidden">
+    <h2>❓ Upload Question & Answer</h2>
+    <form action="/upload/question" method="POST" enctype="multipart/form-data">
+      <select name="subject" required>
+        <option value="">Select Subject</option>
+        <option value="Physics">Physics</option>
+        <option value="Chemistry">Chemistry</option>
+        <option value="Mathematics">Mathematics</option>
+        <option value="Civics">Civics</option>
+        <option value="Biology">Biology</option>
+        <option value="English">English</option>
+        <option value="Kiswahili">Kiswahili</option>
+        <option value="Geography">Geography</option>
+        <option value="Computer Science">Computer Science</option>
+      </select>
+      <textarea name="questionText" placeholder="Enter question text here"></textarea>
+      <label>Question Image</label>
+      <input type="file" name="questionImage" accept="image/*" />
+      <label>Question Video</label>
+      <input type="file" name="questionVideo" accept="video/*" />
+      <label>Question Audio</label>
+      <input type="file" name="questionAudio" accept="audio/*" />
+      <label>Question PDF</label>
+      <input type="file" name="questionPDF" accept="application/pdf" />
+      <textarea name="answer" placeholder="Enter answer here" required></textarea>
+      <button type="submit">Upload Question</button>
+    </form>
+  </section>
+
+  <!-- Upload Past Papers -->
+  <section id="upload-pastpaper" class="hidden">
+    <h2>📄 Upload Past Paper</h2>
+    <form action="/upload/pastpaper" method="POST" enctype="multipart/form-data">
+      <select name="year" required>
+        <option value="">Select Year</option>
+        <option>2025</option>
+        <option>2024</option>
+        <option>2023</option>
+        <option>2022</option>
+        <option>2021</option>
+        <option>2020</option>
+        <!-- Add more years as needed -->
+      </select>
+      <select name="subject" required>
+        <option value="">Select Subject</option>
+        <option>Physics</option>
+        <option>Chemistry</option>
+        <option>Mathematics</option>
+        <option>Civics</option>
+        <option>Biology</option>
+        <option>English</option>
+        <option>Kiswahili</option>
+        <option>Geography</option>
+        <option>Computer Science</option>
+      </select>
+      <select name="level" required>
+        <option value="">Select Level</option>
+        <option>Form 1</option>
+        <option>Form 2</option>
+        <option>Form 3</option>
+        <option>Form 4</option>
+        <option>Form 5</option>
+        <option>Form 6</option>
+      </select>
+      <input type="text" name="title" placeholder="Paper Title" required />
+      <input type="text" name="description" placeholder="Description" required />
+      <label>Upload File (PDF)</label>
+      <input type="file" name="file" accept="application/pdf" required />
+      <button type="submit">Upload Past Paper</button>
+    </form>
+  </section>
+
+  <!-- Upload Teaching Videos -->
+  <section id="upload-video" class="hidden">
+    <h2>🎥 Upload Teaching / Practical Video</h2>
+    <form action="/upload/video" method="POST" enctype="multipart/form-data">
+      <select name="subject" required>
+        <option value="">Select Subject</option>
+        <option>Physics</option>
+        <option>Chemistry</option>
+        <option>Mathematics</option>
+        <option>Civics</option>
+        <option>Biology</option>
+        <option>English</option>
+        <option>Kiswahili</option>
+        <option>Geography</option>
+        <option>Computer Science</option>
+      </select>
+      <input type="text" name="topic" placeholder="Topic" required />
+      <input type="text" name="level" placeholder="Class Level (e.g. Form 1)" required />
+      <input type="text" name="description" placeholder="Description" required />
+      <label>Upload Video File</label>
+      <input type="file" name="videoFile" accept="video/*" />
+      <label>Upload Audio File</label>
+      <input type="file" name="audioFile" accept="audio/*" />
+      <label>Upload Photo</label>
+      <input type="file" name="photo" accept="image/*" />
+      <input type="text" name="externalLink" placeholder="External Video/Audio Link (YouTube, SoundCloud, etc.)" />
+      <button type="submit">Upload Video</button>
+    </form>
+  </section>
+
+  <!-- Upload Sports & Games -->
+  <section id="upload-sports" class="hidden">
+    <h2>🏅 Upload Sports & Games Media</h2>
+    <form action="/upload/sportsmedia" method="POST" enctype="multipart/form-data">
+      <input type="text" name="title" placeholder="Title" required />
+      <textarea name="description" placeholder="Description"></textarea>
+      <input type="text" name="category" placeholder="Category (e.g. Football, Volleyball)" />
+      <label>Upload Media (photo, video, audio)</label>
+      <input type="file" name="mediaFile" accept="image/*,video/*,audio/*" required />
+      <button type="submit">Upload Sports Media</button>
+    </form>
+
+    <hr style="margin:2rem 0;" />
+
+    <h3>Add Game Question</h3>
+    <form action="/upload/sportsgamequestion" method="POST">
+      <textarea name="question" placeholder="Enter game question" required></textarea>
+      <textarea name="answer" placeholder="Enter answer" required></textarea>
+      <button type="submit">Add Question</button>
+    </form>
+  </section>
+</main>
+
+<script>
+  const sections = {
+    book: document.getElementById('upload-book'),
+    question: document.getElementById('upload-question'),
+    pastpaper: document.getElementById('upload-pastpaper'),
+    video: document.getElementById('upload-video'),
+    sports: document.getElementById('upload-sports'),
+  };
+
+  function showSection(key) {
+    Object.entries(sections).forEach(([k, el]) => {
+      el.classList.toggle('hidden', k !== key);
+    });
+  }
+
+  document.getElementById('btn-upload-book').addEventListener('click', () => showSection('book'));
+  document.getElementById('btn-upload-question').addEventListener('click', () => showSection('question'));
+  document.getElementById('btn-upload-pastpaper').addEventListener('click', () => showSection('pastpaper'));
+  document.getElementById('btn-upload-video').addEventListener('click', () => showSection('video'));
+  document.getElementById('btn-upload-sports').addEventListener('click', () => showSection('sports'));
+</script>
+
+</body>
+</html>

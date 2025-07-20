@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Books Library</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+    margin: 0; padding: 0;
+    color: #333;
+  }
+  header {
+    background: #2980b9;
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  main {
+    max-width: 960px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  .filters {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  select, input[type="text"] {
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  button {
+    padding: 0.5rem 1.2rem;
+    background: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #1f618d;
+  }
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+    gap: 1.5rem;
+  }
+  .book-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .book-image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+  }
+  .book-content {
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .book-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem;
+    color: #2980b9;
+  }
+  .book-subject {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 0.7rem;
+  }
+  .book-description {
+    flex-grow: 1;
+    font-size: 0.95rem;
+    color: #555;
+  }
+  .book-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .book-actions a {
+    background: #2980b9;
+    color: white;
+    padding: 0.4rem 0.9rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+  }
+  .book-actions a:hover {
+    background: #1f618d;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem;
+    color: #999;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<header>Books Library</header>
+
+<main>
+  <div class="filters">
+    <select id="subjectFilter" aria-label="Filter by Subject">
+      <option value="">All Subjects</option>
+      <option value="Physics">Physics</option>
+      <option value="Chemistry">Chemistry</option>
+      <option value="Mathematics">Mathematics</option>
+      <option value="Civics">Civics</option>
+      <option value="Biology">Biology</option>
+      <option value="English">English</option>
+      <option value="Kiswahili">Kiswahili</option>
+      <option value="Geography">Geography</option>
+      <option value="Computer Science">Computer Science</option>
+    </select>
+    <input type="text" id="titleFilter" placeholder="Search by Title" />
+    <button id="filterBtn">Filter</button>
+  </div>
+
+  <div class="books-grid" id="booksContainer">
+    <!-- Books loaded here -->
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Your School Site
+</footer>
+
+<script>
+  async function fetchBooks(subject = '', title = '') {
+    try {
+      let url = '/books';
+      const params = new URLSearchParams();
+      if (subject) params.append('subject', subject);
+      if (title) params.append('title', title);
+      if(subject || title) url += '?' + params.toString();
+
+      const res = await fetch(url);
+      if(!res.ok) throw new Error('Failed to fetch books');
+      const books = await res.json();
+
+      const container = document.getElementById('booksContainer');
+      container.innerHTML = '';
+
+      if (books.length === 0) {
+        container.innerHTML = '<p>No books found for the selected filters.</p>';
+        return;
+      }
+
+      books.forEach(book => {
+        const div = document.createElement('div');
+        div.className = 'book-card';
+
+        div.innerHTML = `
+          <img src="/uploads/${book.image || 'default-book.jpg'}" alt="${book.title}" class="book-image" />
+          <div class="book-content">
+            <h3 class="book-title">${book.title}</h3>
+            <div class="book-subject">${book.subject}</div>
+            <p class="book-description">${book.description || ''}</p>
+            <div class="book-actions">
+              <a href="/uploads/${book.file}" target="_blank" rel="noopener">Download PDF</a>
+              <span>👍 ${book.likes || 0} &nbsp;&nbsp; 👎 ${book.dislikes || 0}</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    } catch (err) {
+      console.error(err);
+      document.getElementById('booksContainer').innerHTML = '<p>Error loading books.</p>';
+    }
+  }
+
+  document.getElementById('filterBtn').addEventListener('click', () => {
+    const subject = document.getElementById('subjectFilter').value;
+    const title = document.getElementById('titleFilter').value.trim();
+    fetchBooks(subject, title);
+  });
+
+  window.onload = () => fetchBooks();
+</script>
+
+</body>
+</html>

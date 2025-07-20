@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Past Papers</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f9fafb;
+    margin: 0; padding: 0;
+    color: #333;
+  }
+  header {
+    background: #27ae60;
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  main {
+    max-width: 960px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  .filters {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  select, input[type="text"], button {
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  button {
+    background: #27ae60;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #1e8449;
+  }
+  .papers-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+    gap: 1.5rem;
+  }
+  .paper-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .paper-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem;
+    color: #27ae60;
+  }
+  .paper-subject,
+  .paper-year,
+  .paper-level {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+  }
+  .paper-actions a {
+    align-self: flex-start;
+    background: #27ae60;
+    color: white;
+    padding: 0.4rem 0.9rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+  }
+  .paper-actions a:hover {
+    background: #219150;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem;
+    color: #999;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<header>Past Papers</header>
+
+<main>
+  <div class="filters">
+    <select id="subjectFilter" aria-label="Filter by Subject">
+      <option value="">All Subjects</option>
+      <option value="Physics">Physics</option>
+      <option value="Chemistry">Chemistry</option>
+      <option value="Mathematics">Mathematics</option>
+      <option value="Civics">Civics</option>
+      <option value="Biology">Biology</option>
+      <option value="English">English</option>
+      <option value="Kiswahili">Kiswahili</option>
+      <option value="Geography">Geography</option>
+      <option value="Computer Science">Computer Science</option>
+    </select>
+
+    <select id="yearFilter" aria-label="Filter by Year">
+      <option value="">All Years</option>
+      <option value="2025">2025</option>
+      <option value="2024">2024</option>
+      <option value="2023">2023</option>
+      <option value="2022">2022</option>
+      <option value="2021">2021</option>
+      <option value="2020">2020</option>
+    </select>
+
+    <button id="filterBtn">Filter</button>
+  </div>
+
+  <div class="papers-list" id="papersContainer">
+    <!-- Past papers load here -->
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Your School Site
+</footer>
+
+<script>
+  async function fetchPapers(subject = '', year = '') {
+    try {
+      let url = '/pastpapers';
+      const params = new URLSearchParams();
+      if(subject) params.append('subject', subject);
+      if(year) params.append('year', year);
+      if(subject || year) url += '?' + params.toString();
+
+      const res = await fetch(url);
+      if(!res.ok) throw new Error('Failed to fetch past papers');
+      const papers = await res.json();
+
+      const container = document.getElementById('papersContainer');
+      container.innerHTML = '';
+
+      if(papers.length === 0) {
+        container.innerHTML = '<p>No past papers found for selected filters.</p>';
+        return;
+      }
+
+      papers.forEach(paper => {
+        const div = document.createElement('div');
+        div.className = 'paper-card';
+
+        div.innerHTML = `
+          <h3 class="paper-title">${paper.title}</h3>
+          <div class="paper-subject">Subject: ${paper.subject}</div>
+          <div class="paper-year">Year: ${paper.year}</div>
+          <div class="paper-level">Level: ${paper.level || 'N/A'}</div>
+          <div class="paper-description">${paper.description || ''}</div>
+          <div class="paper-actions">
+            <a href="/uploads/${paper.file}" target="_blank" rel="noopener">Download PDF</a>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    } catch (err) {
+      console.error(err);
+      document.getElementById('papersContainer').innerHTML = '<p>Error loading past papers.</p>';
+    }
+  }
+
+  document.getElementById('filterBtn').addEventListener('click', () => {
+    const subject = document.getElementById('subjectFilter').value;
+    const year = document.getElementById('yearFilter').value;
+    fetchPapers(subject, year);
+  });
+
+  window.onload = () => fetchPapers();
+</script>
+
+</body>
+</html>

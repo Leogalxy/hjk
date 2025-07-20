@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; }
+    .container { max-width: 400px; margin: 5rem auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    input, select { width: 100%; margin-bottom: 1rem; padding: .6rem; border: 1px solid #ccc; border-radius: 4px; }
+    button { width: 100%; padding: .8rem; background: #2980b9; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+    button:hover { background: #1f618d; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Register</h2>
+    <form action="/register" method="POST" enctype="multipart/form-data">
+      <input name="fullname" placeholder="Full Name" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input name="phone" placeholder="Phone" />
+      <input type="password" name="password" placeholder="Password" required />
+      <input type="password" name="confirmPassword" placeholder="Confirm Password" required />
+      <select name="role" required>
+        <option value="">Select Role</option>
+        <option>student</option>
+        <option>teacher</option>
+        <option>parent</option>
+        <option>sponsor</option>
+        <option>other</option>
+      </select>
+      <input name="classLevel" placeholder="Class Level (optional)" />
+      <input type="file" name="photo" accept="image/*" />
+      <button type="submit">Register</button>
+    </form>
+    <p style="text-align:center; margin-top:1rem;">Already have an account? <a href="login.html">Login</a></p>
+  </div>
+</body>
+</html>

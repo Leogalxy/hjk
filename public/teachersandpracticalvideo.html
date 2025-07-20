@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teachers & Practical Videos</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0; padding: 0;
+      background: #f4f6f8;
+    }
+    header {
+      background-color: #34495e;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    main {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .search-box {
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+    .search-box input {
+      width: 100%;
+      max-width: 400px;
+      padding: 0.6rem;
+      font-size: 1rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .card iframe {
+      width: 100%;
+      height: 160px;
+      border: none;
+    }
+    .card-content {
+      padding: 1rem;
+    }
+    .title {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+    .desc {
+      font-size: 0.95rem;
+      color: #555;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <header>Teachers & Practical Videos</header>
+  <main>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search by teacher name or topic...">
+    </div>
+    <div class="grid" id="videoContainer"></div>
+  </main>
+  <footer>&copy; 2025 School Portal</footer>
+
+  <script>
+    async function fetchVideos() {
+      const res = await fetch('/videos');
+      const data = await res.json();
+      displayVideos(data);
+
+      document.getElementById('searchInput').addEventListener('input', function () {
+        const keyword = this.value.toLowerCase();
+        const filtered = data.filter(item => 
+          item.teacher?.toLowerCase().includes(keyword) || 
+          item.title?.toLowerCase().includes(keyword)
+        );
+        displayVideos(filtered);
+      });
+    }
+
+    function displayVideos(videos) {
+      const container = document.getElementById('videoContainer');
+      container.innerHTML = '';
+      videos.forEach(video => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <iframe src="${video.link}" allowfullscreen></iframe>
+          <div class="card-content">
+            <div class="title">${video.title}</div>
+            <div class="desc">Teacher: ${video.teacher}</div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    window.onload = fetchVideos;
+  </script>
+</body>
+</html>

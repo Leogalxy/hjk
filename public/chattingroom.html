@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chatting Room</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #e5ddd5;
+    }
+
+    header {
+      background-color: #075e54;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+    }
+
+    .messages {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background-image: url('https://i.ibb.co/sKg3PrJ/whatsapp-bg.png');
+      background-size: cover;
+    }
+
+    .message {
+      max-width: 70%;
+      margin-bottom: 10px;
+      padding: 10px 15px;
+      border-radius: 10px;
+      background-color: #dcf8c6;
+      align-self: flex-start;
+      word-wrap: break-word;
+    }
+
+    .message.user {
+      background-color: #ffffff;
+      align-self: flex-end;
+    }
+
+    .message img,
+    .message video,
+    .message a {
+      max-width: 100%;
+      display: block;
+      margin-top: 5px;
+    }
+
+    .chat-form {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border-top: 1px solid #ccc;
+    }
+
+    .chat-form input[type="text"] {
+      flex-grow: 1;
+      padding: 10px;
+      margin-right: 5px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      outline: none;
+    }
+
+    .chat-form input[type="file"] {
+      margin-right: 5px;
+    }
+
+    .chat-form button {
+      padding: 8px 16px;
+      background-color: #075e54;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .chat-form button:hover {
+      background-color: #0a7868;
+    }
+
+    @media (max-width: 600px) {
+      .message {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>📱 Chatting Room</header>
+
+  <div class="chat-container">
+    <div class="messages" id="chat-box">
+      <!-- Example messages -->
+      <div class="message">Hello! 👋</div>
+      <div class="message user">Hi! How are you?</div>
+    </div>
+
+    <form class="chat-form" action="/chat" method="POST" enctype="multipart/form-data">
+      <input type="text" name="message" placeholder="Type your message..." />
+      <input type="file" name="attachment" accept="image/*,video/*,.pdf,.doc,.docx" />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+</body>
+</html>

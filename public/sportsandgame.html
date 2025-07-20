@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sports and Games</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+  <div class="max-w-4xl mx-auto py-10 px-5">
+    <h1 class="text-3xl font-bold mb-6 text-center text-green-700">Sports & Games Hub</h1>
+
+    <!-- Media Gallery -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">📸 Sports & Game Media</h2>
+      <div id="media-gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <!-- Media will be injected here -->
+      </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">🎮 Game Quiz</h2>
+      <div id="quiz-section" class="space-y-6">
+        <!-- Questions will be inserted here -->
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Fetch and show sports media
+    fetch('/getsportsmedia')
+      .then(res => res.json())
+      .then(data => {
+        const gallery = document.getElementById('media-gallery');
+        data.forEach(item => {
+          const mediaEl = document.createElement('div');
+          mediaEl.className = 'bg-white shadow rounded-lg p-3';
+          mediaEl.innerHTML = `
+            <img src="${item.filePath}" alt="sports media" class="w-full h-48 object-cover rounded mb-2">
+            <p class="text-sm text-gray-600">${item.description || 'No description'}</p>
+          `;
+          gallery.appendChild(mediaEl);
+        });
+      });
+
+    // Fetch and display sports quiz questions
+    fetch('/getsportsgamequestions')
+      .then(res => res.json())
+      .then(questions => {
+        const quiz = document.getElementById('quiz-section');
+        questions.forEach((q, i) => {
+          const qEl = document.createElement('div');
+          qEl.className = 'p-4 border border-gray-200 rounded';
+          qEl.innerHTML = `
+            <p class="font-semibold text-gray-800 mb-2">${i + 1}. ${q.question}</p>
+            <ul class="space-y-1">
+              ${q.options.map(opt => `<li><input type="radio" name="q${i}" class="mr-2">${opt}</li>`).join('')}
+            </ul>
+          `;
+          quiz.appendChild(qEl);
+        });
+      });
+  </script>
+
+</body>
+</html>
